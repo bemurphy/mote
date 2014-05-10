@@ -21,6 +21,16 @@ scope do
     assert_equal "***", example.call
   end
 
+  test "escaping assignment" do
+    example = Mote.parse("{{ '<script></script>' }}")
+    assert_equal "&lt;script&gt;&lt;&#x2F;script&gt;", example.call
+  end
+
+  test "skipping escaped assignment" do
+    example = Mote.parse("{{{ '<script></script>' }}}")
+    assert_equal "<script></script>", example.call
+  end
+
   test "comment" do
     template = (<<-EOT).gsub(/ {4}/, "")
     *
